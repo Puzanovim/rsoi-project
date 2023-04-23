@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+SQLAlchemy
+pydantic
+
+# migrations
+alembic
+sqlalchemy_utils
+asyncpg

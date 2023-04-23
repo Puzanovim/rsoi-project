@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    image: library/postgres:15
+    image: library/postgres:13
     container_name: postgres
     restart: on-failure
     environment:
@@ -13,6 +13,17 @@ services:
       - ./postgres/:/docker-entrypoint-initdb.d/
     ports:
       - "5432:5432"
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.2
@@ -40,7 +51,59 @@ services:
     depends_on:
       - zookeeper
 
-# TODO добавить сервисы
+  gateway_service:
+#    image: puzanovim/category_service:v1
+    build: gateway_service
+    container_name: gateway_service
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - notes_service
+      - category_service
+      - namespace_service
+      - statistic_service
+
+  notes_service:
+#    image: puzanovim/category_service:v1
+    build: notes_service
+    container_name: notes_service
+    restart: always
+    ports:
+      - "8070:8070"
+    depends_on:
+      - postgres
+
+  category_service:
+#    image: puzanovim/category_service:v1
+    build: category_service
+    container_name: category_service
+    restart: always
+    ports:
+      - "8060:8060"
+    depends_on:
+      - postgres
+
+  namespace_service:
+#    image: puzanovim/category_service:v1
+    build: namespace_service
+    container_name: namespace_service
+    restart: always
+    ports:
+      - "8050:8050"
+    depends_on:
+      - postgres
+
+  statistic_service:
+#    image: puzanovim/category_service:v1
+    build: statistic_service
+    container_name: statistic_service
+    restart: always
+    ports:
+      - "8040:8040"
+    depends_on:
+      - postgres
 
 volumes:
   db-data:
