@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, status, Depends
 
 from notes_service.db.repository import get_note_repo, NoteRepository
-from notes_service.main import get_current_user, get_superuser
+from notes_service.auth import get_current_user, get_superuser
 from notes_service.schemas import NotesPage, InputNote, NoteModel, UserModel, InputNoteFields
 
 router = APIRouter()
