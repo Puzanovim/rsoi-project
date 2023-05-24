@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, status, Depends
 
 from category_service.db.repository import CategoryRepository, get_category_repo
-from category_service.main import get_current_user
+from category_service.auth import get_current_user
 from category_service.schemas import CategoryPage, CategoryModel, InputCategory, UserModel
 
 router = APIRouter()
