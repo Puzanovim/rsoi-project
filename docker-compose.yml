@@ -64,6 +64,7 @@ services:
       - category_service
       - namespace_service
       - statistic_service
+      - identity_provider
 
   notes_service:
 #    image: puzanovim/category_service:v1
@@ -102,6 +103,16 @@ services:
     restart: always
     ports:
       - "8040:8040"
+    depends_on:
+      - postgres
+
+  identity_provider:
+#    image: puzanovim/identity_provider:v1
+    build: identity_provider
+    container_name: identity_provider
+    restart: always
+    ports:
+      - "8030:8030"
     depends_on:
       - postgres
 
