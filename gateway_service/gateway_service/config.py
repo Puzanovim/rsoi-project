@@ -33,6 +33,14 @@ class StatisticConfig(BaseSettings):
         validate_assignment = True
 
 
+class IdentityProviderConfig(BaseSettings):
+    host: str = Field(env='IDENTITY_PROVIDER_HOST', default='identity_provider')
+    port: int = Field(env='IDENTITY_PROVIDER_PORT', default=8030)
+
+    class Config:
+        validate_assignment = True
+
+
 class CircuitBreakerConfig(BaseSettings):
     failure_threshold: int = Field(env='CIRCUIT_BREAKER_FAILURE_THRESHOLD', default=2)
     success_threshold: int = Field(env='CIRCUIT_BREAKER_SUCCESS_THRESHOLD', default=1)
@@ -46,4 +54,5 @@ NOTES_SERVICE_CONFIG: NotesConfig = NotesConfig()
 CATEGORY_SERVICE_CONFIG: CategoryConfig = CategoryConfig()
 NAMESPACE_SERVICE_CONFIG: NamespaceConfig = NamespaceConfig()
 STATISTIC_SERVICE_CONFIG: StatisticConfig = StatisticConfig()
+IDENTITY_PROVIDER_CONFIG: IdentityProviderConfig = IdentityProviderConfig()
 CIRCUIT_BREAKER_CONFIG: CircuitBreakerConfig = CircuitBreakerConfig()

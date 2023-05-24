@@ -8,8 +8,16 @@ class InputNamespace(BaseModel):
     name: str
 
 
+class UpdateNamespace(InputNamespace):
+    name: str | None = None  # type: ignore
+
+
 class NamespaceModel(InputNamespace):
     id: UUID
+
+
+class NamespaceWithUsers(NamespaceModel):
+    users: List[UUID]
 
 
 class NamespacePagination(BaseModel):

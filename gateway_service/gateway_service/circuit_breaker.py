@@ -4,8 +4,10 @@ import logging
 from asyncio import Task
 from typing import Awaitable
 
-from gateway_service.config import CIRCUIT_BREAKER_CONFIG
 from httpx import ConnectTimeout, Response
+
+from gateway_service.config import CIRCUIT_BREAKER_CONFIG
+from gateway_service.exceptions import NotFoundError, UnauthorizedError
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +24,7 @@ class CircuitBreaker:
         name: str,
         failure_threshold: int = CIRCUIT_BREAKER_CONFIG.failure_threshold,
         success_threshold: int = CIRCUIT_BREAKER_CONFIG.success_threshold,
-        timeout: int = CIRCUIT_BREAKER_CONFIG.timeout
+        timeout: int = CIRCUIT_BREAKER_CONFIG.timeout,
     ) -> None:
         self._status: CircuitBreakerStatus = CircuitBreakerStatus.CLOSED
         self.name = name
@@ -36,7 +38,7 @@ class CircuitBreaker:
         self._timeout: int = timeout
         self._wait_timeout_task: Task | None = None
 
-    async def wait_timeout(self):
+    async def wait_timeout(self) -> None:
         await asyncio.sleep(self._timeout)
         self._status = CircuitBreakerStatus.HALF_OPEN
         self._success_count = 0
@@ -64,6 +66,13 @@ class CircuitBreaker:
                         self._status = CircuitBreakerStatus.OPEN
                         self._wait_timeout_task = await asyncio.create_task(self.wait_timeout(), name='wait timeout')
                     return None
+
+                elif response.status_code == 401:
+                    raise UnauthorizedError(details=response.json()["detail"])
+
+                elif response.status_code == 404:
+                    logger.error(f'NOT FOUND ERROR: {response.json()}')
+                    raise NotFoundError(content=response.json())
 
                 return response
 
@@ -95,5 +104,10 @@ class CircuitBreaker:
                     self._wait_timeout_task = await asyncio.create_task(self.wait_timeout(), name='wait timeout')
                     return None
 
-                return response
+                elif response.status_code == 401:
+                    raise UnauthorizedError(details=response.json()["detail"])
 
+                elif response.status_code == 404:
+                    raise NotFoundError(content=response.json())
+
+                return response
