@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, status, Depends
 
 from namespace_service.db.repository import NamespaceRepository, get_namespace_repo
-from namespace_service.main import get_current_user, get_superuser
+from namespace_service.auth import get_current_user, get_superuser
 from namespace_service.schemas import NamespaceModel, InputNamespace, \
     UserNamespacesPage, NamespaceModelWithUsers, NamespaceUsers, UserNamespaces, UserModel, UserNamespace
 
