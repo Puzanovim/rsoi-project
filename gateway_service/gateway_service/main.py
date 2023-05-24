@@ -12,8 +12,6 @@ from gateway_service.routers import router
 app = FastAPI()
 app.include_router(router)
 
-oauth2_scheme = OAuth2AuthorizationCodeBearer(authorizationUrl='login', tokenUrl='token')
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,10 +39,6 @@ async def code_handler(code: str) -> Dict:
 @app.get('/manage/health', status_code=status.HTTP_200_OK)
 async def check_health() -> Dict:
     return {'Service': 'Gateway'}
-
-
-async def get_user_token(token: Annotated[str, Depends(oauth2_scheme)]):
-    return token
 
 
 if __name__ == "__main__":

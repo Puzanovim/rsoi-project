@@ -1,15 +1,21 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
+from fastapi.security import OAuth2AuthorizationCodeBearer
 
 from gateway_service.backend_apis import NotesServiceAPI, NamespaceServiceAPI, CategoryServiceAPI, get_notes_service_api, get_category_service_api, get_namespace_service_api
 from gateway_service.backend_apis.category_service_api.schemas import CategoryPagination
 from gateway_service.backend_apis.namespace_service_api.schemas import NamespacePagination
 from gateway_service.backend_apis.notes_service_api.schemas import InputNote, NotesPagination, NoteModel
-from gateway_service.main import get_user_token
 from gateway_service.schemas import CreateFullNote
 
 router = APIRouter()
+
+oauth2_scheme = OAuth2AuthorizationCodeBearer(authorizationUrl='login', tokenUrl='token')
+
+
+async def get_user_token(token: str = Depends(oauth2_scheme)):
+    return token
 
 
 @router.get('/namespaces', status_code=status.HTTP_200_OK, response_model=NamespacePagination)

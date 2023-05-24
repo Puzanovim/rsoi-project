@@ -1,7 +1,7 @@
 import enum
 from typing import Dict
 
-from gateway_system.exceptions import ValidationError
+from gateway_service.exceptions import ValidationError
 
 
 def validate_page_size_params(page: int, size: int) -> None:
