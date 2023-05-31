@@ -1,15 +1,15 @@
-from typing import List
+from typing import List, Sequence
 from uuid import UUID
 
 from sqlalchemy import delete
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
+from sqlalchemy.future import select
 
 from notes_service.db.db_config import async_session
 from notes_service.db.models import Note
 from notes_service.exceptions import NotFoundNote
-from notes_service.schemas import InputNote, UpdateNote, NoteModel
-from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
-from sqlalchemy.future import select
+from notes_service.schemas import InputNote, NoteModel, UpdateNote
 
 
 class NoteRepository:
@@ -21,7 +21,7 @@ class NoteRepository:
         async with session, session.begin():
             result = await session.execute(select(Note))
 
-        notes: List[NoteModel] = result.scalars().all()
+        notes: Sequence[NoteModel] = result.scalars().all()
 
         return [NoteModel.from_orm(note) for note in notes]
 
@@ -30,7 +30,7 @@ class NoteRepository:
         async with session, session.begin():
             result = await session.execute(select(Note).where(Note.namespace_id == namespace_id))
 
-        notes: List[NoteModel] = result.scalars().all()
+        notes: Sequence[NoteModel] = result.scalars().all()
 
         return [NoteModel.from_orm(note) for note in notes]
 
