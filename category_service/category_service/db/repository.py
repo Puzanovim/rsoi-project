@@ -1,15 +1,15 @@
-from typing import List
+from typing import List, Sequence, Set
 from uuid import UUID
 
 from sqlalchemy import delete
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
+from sqlalchemy.future import select
 
 from category_service.db.db_config import async_session
 from category_service.db.models import Category, CategoryToNote
 from category_service.exceptions import NotFoundCategory
 from category_service.schemas import CategoryModel, InputCategory
-from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
-from sqlalchemy.future import select
 
 
 class CategoryRepository:
@@ -21,7 +21,7 @@ class CategoryRepository:
         async with session, session.begin():
             result = await session.execute(select(Category).where(Category.namespace_id == namespace_id))
 
-        categories: List[Category] = result.scalars().all()
+        categories: Sequence[Category] = result.scalars().all()
 
         return [CategoryModel.from_orm(category) for category in categories]
 
@@ -83,16 +83,22 @@ class CategoryRepository:
         async with session, session.begin():
             result = await session.execute(select(CategoryToNote).where(CategoryToNote.note_id == note_id))
 
-        categories: List[Category] = result.scalars().all()
+        categories_to_notes: Sequence[CategoryToNote] = result.scalars().all()
+        categories: List[CategoryModel] = []
 
-        return [CategoryModel.from_orm(category) for category in categories]
+        for category in categories_to_notes:
+            category_model: CategoryModel = await self.get_category(category.category_id)  # type: ignore
+            categories.append(category_model)
 
-    async def _check_note_has_category(self, category_id: UUID, note_id: UUID):
+        return categories
+
+    async def _check_note_has_category(self, category_id: UUID, note_id: UUID) -> bool:
         categories = await self.get_note_categories(note_id)
 
         for category in categories:
             if category.id == category_id:
                 return True
+
         return False
 
     async def add_category_to_note(self, category_id: UUID, note_id: UUID) -> None:
@@ -111,6 +117,19 @@ class CategoryRepository:
             session.add(category_to_note)
             await session.flush()
             await session.refresh(category_to_note)
+
+    async def delete_category_from_note(self, category_id: UUID, note_id: UUID) -> None:
+        note_categories_ids: Set[UUID] = set([category.id for category in await self.get_note_categories(note_id)])
+
+        if category_id not in note_categories_ids:
+            raise NotFoundCategory
+
+        session: AsyncSession = self._session_factory()
+        async with session, session.begin():
+            category_query = delete(CategoryToNote).where(
+                CategoryToNote.category_id == category_id, CategoryToNote.note_id == note_id
+            )
+            await session.execute(category_query)
 
 
 category_repository: CategoryRepository = CategoryRepository(async_session)

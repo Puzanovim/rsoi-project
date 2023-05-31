@@ -1,7 +1,7 @@
 from typing import Dict
 
 import uvicorn
-from fastapi import FastAPI, status, Request
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
 from category_service.config import DB_CONFIG
@@ -19,7 +19,7 @@ async def check_health() -> Dict:
 
 
 @app.exception_handler(NotFoundCategory)
-async def not_found_category_handler(request: Request, exc: NotFoundCategory):
+async def not_found_category_handler(request: Request, exc: NotFoundCategory) -> JSONResponse:
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
         content={'message': 'Category not found'},

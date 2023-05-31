@@ -27,3 +27,7 @@ class CategoryPage(BaseModel):
     size: int
     total_elements: int
     items: List[CategoryModel]
+
+
+class NoteCategories(BaseModel):
+    items: List[CategoryModel]

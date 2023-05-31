@@ -1,13 +1,12 @@
 import uuid
-from typing import Dict, List, AsyncGenerator
+from typing import AsyncGenerator, Dict, List
 
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient
 
 from category_service.main import app
-from category_service.schemas import InputCategory, CategoryModel
-
+from category_service.schemas import CategoryModel, InputCategory
 
 NAMESPACE_F = uuid.uuid4()
 NAMESPACE_S = uuid.uuid4()
