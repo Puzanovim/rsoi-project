@@ -1,8 +1,9 @@
 import uuid
 
-from namespace_service.db.db_config import Base
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
+
+from namespace_service.db.db_config import Base
 
 
 class Namespace(Base):
@@ -10,6 +11,7 @@ class Namespace(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String(80), nullable=False)
+    owner_id = Column(UUID(as_uuid=True), nullable=False)
 
 
 class NamespaceToUser(Base):

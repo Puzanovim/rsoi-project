@@ -1,16 +1,22 @@
-from typing import List
+from typing import List, Sequence
 from uuid import UUID
 
-from sqlalchemy import delete
+from sqlalchemy import Column, delete
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
+from sqlalchemy.future import select
 
 from namespace_service.db.db_config import async_session
 from namespace_service.db.models import Namespace, NamespaceToUser
 from namespace_service.exceptions import NotFoundNamespace
-from namespace_service.schemas import NamespaceModel, InputNamespace, UpdateNamespace, UserNamespaces, NamespaceUsers, \
-    UserNamespace
-from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
-from sqlalchemy.future import select
+from namespace_service.schemas import (
+    InputNamespace,
+    NamespaceModel,
+    NamespaceUsers,
+    UpdateNamespace,
+    UserNamespace,
+    UserNamespaces,
+)
 
 
 class NamespaceRepository:
@@ -22,7 +28,7 @@ class NamespaceRepository:
         async with session, session.begin():
             result = await session.execute(select(Namespace))
 
-        namespaces: List[Namespace] = result.scalars().all()
+        namespaces: Sequence[Namespace] = result.scalars().all()
 
         return [NamespaceModel.from_orm(namespace) for namespace in namespaces]
 
@@ -38,8 +44,8 @@ class NamespaceRepository:
 
         return NamespaceModel.from_orm(namespace)
 
-    async def create_namespace(self, namespace: InputNamespace) -> NamespaceModel:
-        new_namespace = Namespace(**namespace.dict())
+    async def create_namespace(self, namespace: InputNamespace, owner_id: UUID) -> NamespaceModel:
+        new_namespace = Namespace(**namespace.dict(), owner_id=owner_id)
 
         session: AsyncSession = self._session_factory()
         async with session, session.begin():
@@ -83,20 +89,16 @@ class NamespaceRepository:
         async with session, session.begin():
             result = await session.execute(select(NamespaceToUser).where(NamespaceToUser.user_id == user_id))
 
-        namespaces: List[NamespaceToUser] = result.scalars().all()
-        user_namespaces: List[UUID] = [namespace.namespace_id for namespace in namespaces]
-
-        return UserNamespaces(namespaces=user_namespaces)
+        namespaces: Sequence[NamespaceToUser] = result.scalars().all()
+        return UserNamespaces(namespaces=[namespace.namespace_id for namespace in namespaces])  # type: ignore
 
     async def get_namespace_users(self, namespace_id: UUID) -> NamespaceUsers:
         session: AsyncSession = self._session_factory()
         async with session, session.begin():
             result = await session.execute(select(NamespaceToUser).where(NamespaceToUser.namespace_id == namespace_id))
 
-        namespaces: List[NamespaceToUser] = result.scalars().all()
-        namespace_users: List[UUID] = [namespace.user_id for namespace in namespaces]
-
-        return NamespaceUsers(users=namespace_users)
+        namespaces: Sequence[NamespaceToUser] = result.scalars().all()
+        return NamespaceUsers(users=[namespace.user_id for namespace in namespaces])  # type: ignore
 
     async def get_namespace_user(self, user_id: UUID, namespace_id: UUID) -> UserNamespace:
         session: AsyncSession = self._session_factory()
