@@ -1,0 +1,2 @@
+class NotFoundStatistic(Exception):
+    pass
