@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Any
+from typing import Any, Dict
 
 from alembic import command
 from alembic.config import Config
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
-SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://program:test@postgres:5432/categories"
+SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://program:test@postgres:5432/users"
 
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
 async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)  # type: ignore

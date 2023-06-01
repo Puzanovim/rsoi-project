@@ -1,8 +1,9 @@
 import uuid
 
-from identity_provider.db.db_config import Base
-from sqlalchemy import Column, String, Boolean
+from sqlalchemy import Boolean, Column, String
 from sqlalchemy.dialects.postgresql import UUID
+
+from identity_provider.db.db_config import Base
 
 
 class User(Base):

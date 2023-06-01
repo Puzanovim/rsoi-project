@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -13,23 +14,41 @@ class TokenData(BaseModel):
     is_superuser: bool
 
 
-class InputUser(BaseModel):
+class BaseUser(BaseModel):
     username: str
     first_name: str
     second_name: str
     email: str
     is_superuser: bool = False
 
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
 
-class UserModel(InputUser):
+
+class InputUser(BaseUser):
+    password: str
+
+
+class UserModel(BaseUser):
     id: UUID
+
+
+class UserDB(UserModel):
     hashed_password: str
 
 
 class UpdateUser(InputUser):
-    username: str | None
-    first_name: str | None
-    second_name: str | None
-    email: str | None
-    is_superuser: bool | None
-    hashed_password: str | None
+    username: str | None = None  # type: ignore
+    first_name: str | None = None  # type: ignore
+    second_name: str | None = None  # type: ignore
+    email: str | None = None  # type: ignore
+    is_superuser: bool | None = None  # type: ignore
+    hashed_password: str | None = None  # type: ignore
+
+
+class UsersPage(BaseModel):
+    page: int
+    size: int
+    total_elements: int
+    items: List[UserModel]

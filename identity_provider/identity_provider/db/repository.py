@@ -1,15 +1,20 @@
-from typing import List
+from typing import List, Sequence
 from uuid import UUID
 
 from sqlalchemy import delete
-
-from identity_provider.db.db_config import async_session
-from identity_provider.db.models import User
-from identity_provider.exceptions import NotFoundUser
-from identity_provider.schemas import UserModel, InputUser, UpdateUser
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
 from sqlalchemy.future import select
+
+from identity_provider.config import pwd_context
+from identity_provider.db.db_config import async_session
+from identity_provider.db.models import User
+from identity_provider.exceptions import NotFoundUser
+from identity_provider.schemas import InputUser, UpdateUser, UserDB, UserModel
+
+
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
 
 
 class UserRepository:
@@ -21,7 +26,7 @@ class UserRepository:
         async with session, session.begin():
             result = await session.execute(select(User))
 
-        users: List[User] = result.scalars().all()
+        users: Sequence[User] = result.scalars().all()
 
         return [UserModel.from_orm(user) for user in users]
 
@@ -37,7 +42,7 @@ class UserRepository:
 
         return UserModel.from_orm(user)
 
-    async def get_user_by_username(self, username: str) -> UserModel:
+    async def get_user_by_username(self, username: str) -> UserDB:
         session: AsyncSession = self._session_factory()
         async with session, session.begin():
             result = await session.execute(select(User).where(User.username == username))
@@ -47,7 +52,7 @@ class UserRepository:
             except NoResultFound:
                 raise NotFoundUser
 
-        return UserModel.from_orm(user)
+        return UserDB.from_orm(user)
 
     async def create_user(self, user: InputUser) -> UserModel:
         try:
@@ -55,7 +60,7 @@ class UserRepository:
         except NotFoundUser:
             pass
 
-        new_user = User(**user.dict())
+        new_user = User(**user.dict(exclude={'password'}), hashed_password=get_password_hash(user.password))
 
         session: AsyncSession = self._session_factory()
         async with session, session.begin():
