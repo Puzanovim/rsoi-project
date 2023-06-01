@@ -38,6 +38,7 @@ jobs:
           docker build category_service --target tests
           docker build namespace_service --target tests
           docker build statistic_service --target tests
+          docker build identity_provider --target tests
 
       - name: Run containers
         timeout-minutes: 5
@@ -46,7 +47,15 @@ jobs:
           docker compose up -d
           ./scripts/wait-script.sh
         env:
-          WAIT_PORTS: 8080,8070,8060,8050,8040
+          WAIT_PORTS: 8080,8070,8060,8050,8040,8030
+
+      - name: Run API Tests
+        uses: matt-ball/newman-action@master
+        with:
+            collection: v5/postman/collection.json
+            environment: v5/postman/environment.json
+            delayRequest: 100
+            reporters: '[ "cli" ]'
 
 #      - name: GitHub auto grader mark
 #        uses: Romanow/google-sheet-autograder-marker@v1.0
