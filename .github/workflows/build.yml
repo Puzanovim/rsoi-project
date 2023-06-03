@@ -17,45 +17,59 @@ jobs:
 
       - uses: docker/setup-buildx-action@v2
 
-#      - name: Login to Docker Hub
-#        uses: docker/login-action@v2
-#        with:
-#          username: ${{ secrets.DOCKER_LOGIN }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-
-#      - name: Build and push services
-#        run: |
-#          docker build -t ${{ env.GATEWAY_SERVICE_IMAGE }} gateway_system && docker push ${{ env.GATEWAY_SERVICE_IMAGE }}
-#          docker build -t ${{ env.LIBRARY_SYSTEM_IMAGE }} library_system && docker push ${{ env.LIBRARY_SYSTEM_IMAGE }}
-#          docker build -t ${{ env.RATING_SYSTEM_IMAGE }} rating_system && docker push ${{ env.RATING_SYSTEM_IMAGE }}
-#          docker build -t ${{ env.RESERVATION_SYSTEM_IMAGE }} reservation_system && docker push ${{ env.RESERVATION_SYSTEM_IMAGE }}
-
-      - name: Build images
-        timeout-minutes: 10
-        run: |
-          docker build gateway_service --target tests
-          docker build notes_service --target tests
-          docker build category_service --target tests
-          docker build namespace_service --target tests
-          docker build statistic_service --target tests
-          docker build identity_provider --target tests
-
-      - name: Run containers
-        timeout-minutes: 5
-        run: |
-          docker compose build
-          docker compose up -d
-          ./scripts/wait-script.sh
-        env:
-          WAIT_PORTS: 8080,8070,8060,8050,8040,8030
-
-      - name: Run API Tests
-        uses: matt-ball/newman-action@master
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-            collection: v5/postman/collection.json
-            environment: v5/postman/environment.json
-            delayRequest: 100
-            reporters: '[ "cli" ]'
+          username: ${{ secrets.DOCKER_LOGIN }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push services
+        run: |
+          docker build -t ${{ secrets.GATEWAY_SERVICE_IMAGE }} gateway_service && docker push ${{ secrets.GATEWAY_SERVICE_IMAGE }}
+          docker build -t ${{ secrets.CATEGORY_SERVICE_IMAGE }} category_service && docker push ${{ secrets.CATEGORY_SERVICE_IMAGE }}
+          docker build -t ${{ secrets.IDENTITY_PROVIDER_IMAGE }} identity_provider && docker push ${{ secrets.IDENTITY_PROVIDER_IMAGE }}
+          docker build -t ${{ secrets.NAMESPACE_SERVICE_IMAGE }} namespace_service && docker push ${{ secrets.NAMESPACE_SERVICE_IMAGE }}
+          docker build -t ${{ secrets.NOTES_SERVICE_IMAGE }} notes_service && docker push ${{ secrets.NOTES_SERVICE_IMAGE }}
+          docker build -t ${{ secrets.STATISTIC_SERVICE_IMAGE }} statistic_service && docker push ${{ secrets.STATISTIC_SERVICE_IMAGE }}
+          docker build -t ${{ secrets.FRONTEND_IMAGE }} frontend && docker push ${{ secrets.FRONTEND_IMAGE }}
+
+#      - name: Deploy
+#        run: |
+#          kubectl config set-cluster k8s --server="${{ secrets.SERVER_URL }}" --insecure-skip-tls-verify=true
+#          kubectl config set-credentials main-admin --token="${{ secrets.SA_TOKEN }}"
+#          kubectl config set-context default --cluster=k8s --user=main-admin
+#          kubectl config use-context default
+#
+#          cd k8s
+#          helm upgrade services ./services-chart
+#          sleep 60
+
+#      - name: Build images
+#        timeout-minutes: 10
+#        run: |
+#          docker build gateway_service --target tests
+#          docker build notes_service --target tests
+#          docker build category_service --target tests
+#          docker build namespace_service --target tests
+#          docker build statistic_service --target tests
+#          docker build identity_provider --target tests
+#
+#      - name: Run containers
+#        timeout-minutes: 5
+#        run: |
+#          docker compose build
+#          docker compose up -d
+#          ./scripts/wait-script.sh
+#        env:
+#          WAIT_PORTS: 8080,8070,8060,8050,8040,8030
+#
+#      - name: Run API Tests
+#        uses: matt-ball/newman-action@master
+#        with:
+#            collection: v5/postman/collection.json
+#            environment: v5/postman/environment.json
+#            delayRequest: 100
+#            reporters: '[ "cli" ]'
 
 #      - name: GitHub auto grader mark
 #        uses: Romanow/google-sheet-autograder-marker@v1.0
@@ -66,8 +80,8 @@ jobs:
 #          user_column: 'D'
 #          column_offset: 'F'
 #          mark: "'+"
-
-      - name: Stop containers
-        if: always()
-        continue-on-error: true
-        run: docker compose down -v
+#
+#      - name: Stop containers
+#        if: always()
+#        continue-on-error: true
+#        run: docker compose down -v
