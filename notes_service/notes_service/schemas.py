@@ -40,3 +40,8 @@ class NotesPage(BaseModel):
     size: int
     total_elements: int
     items: List[NoteModel]
+
+
+class StatisticMessage(BaseModel):
+    service: str
+    description: str

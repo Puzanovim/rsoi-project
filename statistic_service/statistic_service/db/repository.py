@@ -46,8 +46,8 @@ class StatisticRepository:
 
         return StatisticModel.from_orm(statistic)
 
-    async def add_user(self, user: InputStatistic) -> StatisticModel:
-        new_statistic = Statistic(**user.dict())
+    async def add_statistic(self, statistic: InputStatistic) -> StatisticModel:
+        new_statistic = Statistic(**statistic.dict())
 
         session: AsyncSession = self._session_factory()
         async with session, session.begin():

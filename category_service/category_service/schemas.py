@@ -31,3 +31,8 @@ class CategoryPage(BaseModel):
 
 class NoteCategories(BaseModel):
     items: List[CategoryModel]
+
+
+class StatisticMessage(BaseModel):
+    service: str
+    description: str

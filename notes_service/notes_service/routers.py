@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, status
 
 from notes_service.auth import get_current_user, get_superuser
 from notes_service.db.repository import NoteRepository, get_note_repo
+from notes_service.kafka_producer import KafkaProducer, get_kafka_producer
 from notes_service.schemas import InputNote, InputNoteFields, NoteModel, NotesPage, UserModel
 
 router = APIRouter()
@@ -46,16 +47,22 @@ async def get_note(
 async def create_note(
     note: InputNoteFields,
     repo: NoteRepository = Depends(get_note_repo),
+    kafka: KafkaProducer = Depends(get_kafka_producer),
     current_user: UserModel = Depends(get_current_user),
 ) -> NoteModel:
     new_note: InputNote = InputNote(**note.dict(), author_id=current_user.id)
-    return await repo.create_note(new_note)
+    note = await repo.create_note(new_note)
+    await kafka.pull(f'Created note {note.title}')
+    return note
 
 
 @router.delete('/{note_id}', status_code=status.HTTP_204_NO_CONTENT, response_model=None)
 async def delete_note(
     note_id: UUID,
     repo: NoteRepository = Depends(get_note_repo),
+    kafka: KafkaProducer = Depends(get_kafka_producer),
     current_user: UserModel = Depends(get_superuser),
 ) -> None:
+    note = await repo.get_note(note_id)
     await repo.delete_note(note_id)
+    await kafka.pull(f'Deleted note {note.title}')

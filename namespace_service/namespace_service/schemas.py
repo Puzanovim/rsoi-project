@@ -60,3 +60,8 @@ class UserNamespacesPage(BaseModel):
     size: int
     total_elements: int
     items: List[NamespaceModel]
+
+
+class StatisticMessage(BaseModel):
+    service: str
+    description: str

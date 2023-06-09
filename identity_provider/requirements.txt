@@ -7,17 +7,25 @@
 alembic==1.10.3
     # via -r requirements.in
 anyio==3.6.2
-    # via starlette
+    # via
+    #   httpcore
+    #   starlette
 asyncpg==0.27.0
     # via -r requirements.in
 bcrypt==4.0.1
     # via passlib
+certifi==2023.5.7
+    # via
+    #   httpcore
+    #   httpx
 cffi==1.15.1
     # via cryptography
 click==8.1.3
     # via uvicorn
 colorama==0.4.6
     # via click
+confluent-kafka==2.1.1
+    # via -r requirements.in
 cryptography==40.0.2
     # via python-jose
 ecdsa==0.18.0
@@ -27,9 +35,17 @@ fastapi==0.95.1
 greenlet==2.0.2
     # via sqlalchemy
 h11==0.14.0
-    # via uvicorn
+    # via
+    #   httpcore
+    #   uvicorn
+httpcore==0.17.2
+    # via httpx
+httpx==0.24.1
+    # via -r requirements.in
 idna==3.4
-    # via anyio
+    # via
+    #   anyio
+    #   httpx
 mako==1.2.4
     # via alembic
 markupsafe==2.1.2
@@ -55,7 +71,10 @@ rsa==4.9
 six==1.16.0
     # via ecdsa
 sniffio==1.3.0
-    # via anyio
+    # via
+    #   anyio
+    #   httpcore
+    #   httpx
 sqlalchemy==2.0.10
     # via
     #   -r requirements.in

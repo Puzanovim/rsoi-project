@@ -3,6 +3,7 @@ uvicorn
 SQLAlchemy
 pydantic
 python-jose[cryptography]
+confluent_kafka
 
 # migrations
 alembic

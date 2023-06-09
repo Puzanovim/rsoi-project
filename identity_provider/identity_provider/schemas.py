@@ -52,3 +52,8 @@ class UsersPage(BaseModel):
     size: int
     total_elements: int
     items: List[UserModel]
+
+
+class StatisticMessage(BaseModel):
+    service: str
+    description: str

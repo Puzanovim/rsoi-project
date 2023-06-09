@@ -24,5 +24,10 @@ class AuthConfig(BaseSettings):
         validate_assignment = True
 
 
+class KafkaConfig(BaseSettings):
+    topic: str = Field(default='namespaces', env='NAMESPACES_TOPIC')
+
+
 DB_CONFIG: DBConfig = DBConfig()
 AUTH_CONFIG: AuthConfig = AuthConfig()
+KAFKA_CONFIG: KafkaConfig = KafkaConfig()

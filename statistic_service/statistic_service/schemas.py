@@ -16,10 +16,17 @@ class StatisticFilter(BaseModel):
     finish_time: datetime | None = None
 
 
-class InputStatistic(BaseModel):
+class InputStatisticFields(BaseModel):
     service: str
     description: str
-    created_time: datetime
+
+    class Config:
+        orm_mode = True
+        arbitrary_types_allowed = True
+
+
+class InputStatistic(InputStatisticFields):
+    created_time: datetime = datetime.utcnow()
 
 
 class StatisticModel(InputStatistic):

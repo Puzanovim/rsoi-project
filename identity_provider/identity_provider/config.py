@@ -46,6 +46,11 @@ class AdminCredentials(BaseSettings):
         validate_assignment = True
 
 
+class KafkaConfig(BaseSettings):
+    topic: str = Field(default='identity_provider', env='IDENTITY_PROVIDER_TOPIC')
+
+
 DB_CONFIG: DBConfig = DBConfig()
 AUTH_CONFIG: AuthConfig = AuthConfig()
 ADMIN_CREDS: AdminCredentials = AdminCredentials()
+KAFKA_CONFIG: KafkaConfig = KafkaConfig()
