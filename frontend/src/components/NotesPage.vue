@@ -40,17 +40,31 @@
             </div>
         </div>
 
-<!--        <div class="mt-3">
+        <div class="mt-3">
             <p>Список пользователей в пространстве страниц:</p>
-            <div>
-
+            <div v-for="user in namespace.users" :key="user">
+              {{user}}
             </div>
-            <div class="mt-3">
-                <MyButton class="blue-buttons" @click="addUserToNamespace">
+            <div class="mt-3" v-if="user.is_superuser === true">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" style="margin-right: 20px;"
+                        @click="getAllUsers()">
                     Добавить пользователя в пространство страниц
-                </MyButton>
+                </button>
+                <div class="dropdown-menu" v-if="users.items !== undefined">
+                    <div v-if="users.items.length !== 0">
+                        <ul v-for="user in users.items" :key="user.id"
+                            @click="addUserToNamespace(user)"
+                            style="text-decoration: none; color: black">
+                                <li style="border-bottom: 1px solid grey;" class="p-2"
+                                >
+                                    ФИО: {{ user.first_name }} {{ user.second_name }}, логин: {{ user.username }}
+                                </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-        </div>-->
+        </div>
 
         <div class="mt-3">
             <MyButton style="background: red; border: red" @click="deleteNamespace">
@@ -82,11 +96,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['notes', 'namespace', 'categories']),
+        ...mapGetters(['notes', 'namespace', 'categories', 'users', 'user']),
     },
     methods: {
-        ...mapActions(['get_notes', 'get_categories', 'get_note']),
-        ...mapMutations(['post_category', 'delete_namespace']),
+        ...mapActions(['get_notes', 'get_categories', 'get_note', 'get_users']),
+        ...mapMutations(['post_category', 'delete_namespace', 'add_user_to_namespace']),
         deleteNamespace(){
             this.modalVisible = true
             this.modalButtons = [
@@ -119,14 +133,23 @@ export default {
             this.$router.push('/note')
             console.log('Замтека')
         },
-        addUserToNamespace(){
-
+        getAllUsers(){
+            this.get_users()
+            console.log(this.users)
+        },
+        addUserToNamespace(user){
+            console.log(user)
+            this.add_user_to_namespace({
+                namespaceId: this.namespace.id,
+                userId: user.id
+            })
         }
     },
     watch: {
         namespace: {
             handler(namespace) {
                 if (namespace.id !== undefined){
+                    console.log(namespace)
                     this.get_notes({
                         namespaceId: this.namespace.id
                     })
@@ -156,6 +179,12 @@ export default {
                     })
                     this.needUpdate = false
                 }
+            },
+            immediate: true
+        },
+        users: {
+            handler(users) {
+               console.log(users)
             },
             immediate: true
         },

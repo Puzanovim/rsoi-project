@@ -21,7 +21,7 @@ const actions = {
         };
         axios(config)
             .then(function (response) {
-                commit('set_user', response.data)
+                commit('set_users', response.data)
             })
             .catch(function (error) {
                 console.log(error);
@@ -68,7 +68,29 @@ const actions = {
                     };
                     axios(config)
                         .then(function (response) {
-                            commit('set_statistics', response.data)
+                            console.log(response.data.items.length)
+                      /*      if (response.data.items.length === 0){
+                                let arr = [
+                                    {"service": 'gateway', "description": 'gateway service', "created_time": '02-06-2023 14:59:05',
+                                        "id": '7ycbh5d6-3784-48e9-c78d-0cidhr7c8sju'},
+                                    {"service": 'identity', "description": 'identity-provider service', "created_time": '02-06-2023 14:59:05',
+                                        "id": '9djch5d6-8907-48e9-b33c-8c78dyfhjw67'},
+                                    {"service": 'namespaces', "description": 'namespaces service', "created_time": '02-06-2023 14:59:05',
+                                        "id": 'eu372yc-1782-48e9-s87d-gyeu7cydjkcl'},
+                                    {"service": 'notes', "description": 'notes service', "created_time": '02-06-2023 14:59:05',
+                                        "id": 'fj8ud78f-4678-48e9-c67s-8cjsidkfu7xhd6'},
+                                    {"service": 'category', "description": 'category service', "created_time": '02-06-2023 14:59:05',
+                                        "id": '0djf7e6d-3742-48e9-l35x-o9wdgh56cghdu'},
+                                    {"service": 'frontend', "description": 'frontend service', "created_time": '02-06-2023 14:59:05',
+                                        "id": '7g67sc56-9856-48e9-o66i-7cgsh46wyduikcl'},
+                                    {"service": 'statistic', "description": 'statistics service', "created_time": '02-06-2023 14:59:05',
+                                        "id": '9csjudy7-1856-48e9-z78g-9fikjfuchs78fu'}
+                                ]
+                                commit('set_statistics', arr)
+                            }*//*
+                            else {*/
+                                commit('set_statistics', response.data.items)
+                            /*}*/
                         })
                         .catch(function (error){
                             console.log(error);
@@ -121,6 +143,7 @@ const mutations = {
                 console.log(error.response)
             });
     },
+
     //Удалить пользователя
     delete_user: (state, userId) => {
         let config = {
@@ -138,6 +161,7 @@ const mutations = {
                 console.log(error.response)
             });
     },
+
 }
 const  getters = {
     users(state) {

@@ -36,8 +36,8 @@ const actions = {
             }
         };
         axios(config)
-            .then(function () {
-                commit('set_namespace', namespace.namespace)
+            .then(function (response) {
+                commit('set_namespace', response.data)
             })
             .catch(function (error) {
                 console.log(error);
@@ -110,10 +110,10 @@ const mutations = {
     },
 
     //Добавить польователя в пространство страниц
-    add_user_to_namespace: (state, namespaceId) => {
+    add_user_to_namespace: (state, id) => {
         let config = {
             method: 'post',
-            url: 'http://localhost:8080/namespaces/' + namespaceId + '/users',
+            url: 'http://localhost:8080/namespaces/' + id.namespaceId + '/users/' + id.userId,
             headers: {
                 'Authorization': 'Bearer ' + defaultModule.state.token
             }

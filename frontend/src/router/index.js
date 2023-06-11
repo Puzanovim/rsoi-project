@@ -1,9 +1,9 @@
 import { createWebHistory, createRouter } from "vue-router";
-import AuthPage from "@/components/AuthPage";
+import AuthPage from "@/components/AuthPage.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import NotesPage from "@/components/NotesPage.vue";
 import RegistrationPage from "@/components/RegistrationPage.vue";
-import store from '../store/index'
+import store from '../store'
 import ErrorPage from "@/components/ErrorPage.vue";
 import NotePage from "@/components/NotePage.vue";
 import EditNotePage from "@/components/EditNotePage.vue";

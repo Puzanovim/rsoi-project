@@ -69,7 +69,7 @@ export default {
         ...mapGetters(['namespaces']),
     },
     methods: {
-        ...mapActions(['get_namespaces', "get_namespace"]),
+        ...mapActions(['get_namespaces', "get_namespace", 'get_users_me']),
         ...mapMutations(['post_namespaces']),
         createNamespace() {
             this.modalVisible = true
@@ -88,9 +88,11 @@ export default {
                 this.name = ''
             }
             this.get_namespaces()
+            this.get_users_me()
         },
         showNamespaces(){
             this.get_namespaces()
+            this.get_users_me()
         },
         exit() {
             this.$router.push('/')
@@ -108,6 +110,8 @@ export default {
                 if (this.needUpdate) {
                     console.log('get namespaces')
                     this.get_namespaces()
+                    this.get_users_me()
+
                 }
                 console.log(this.namespaces)
                 this.needUpdate = false
