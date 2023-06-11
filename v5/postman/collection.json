@@ -1,0 +1,1910 @@
+{
+	"info": {
+		"_postman_id": "17893a73-2703-413d-be35-7a77a0021667",
+		"name": "Notes system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6032506"
+	},
+	"item": [
+		{
+			"name": "Gateway API",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.access_token).not.be.empty",
+											"    pm.collectionVariables.set(\"authorizationTokenAdmin\", response.access_token)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "{{usernameAdmin}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{passwordAdmin}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/login",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login Not Existed User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(404)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "hello",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "world",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/login",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Создать пользователя\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"",
+											"    pm.expect(response.id).to.be.not.undefined",
+											"    pm.expect(response.password).to.be.undefined",
+											"    pm.expect(response.hashed_password).to.be.undefined",
+											"",
+											"    pm.expect(response.username).to.be.eq(\"user\")",
+											"    pm.expect(response.first_name).to.be.eq(\"user\")",
+											"    pm.expect(response.second_name).to.be.eq(\"user\")",
+											"    pm.expect(response.email).to.be.eq(\"user@example.ru\")",
+											"    pm.expect(response.is_superuser).to.be.eq(false)",
+											"",
+											"    pm.collectionVariables.set(\"user_id\", response.id)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"first_name\": \"{{first_name}}\",\r\n    \"second_name\": \"{{second_name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"password\": \"{{password}}\",\r\n    \"is_superuser\": \"{{is_superuser}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/users",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.access_token).not.be.empty",
+											"    pm.collectionVariables.set(\"authorizationToken\", response.access_token)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/login",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get admin me Info",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить личный кабинет\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/users/me",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"users",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get user me Info",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить личный кабинет\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/users/me",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"users",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "[auth] Get Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/categories?page=1&size=100&namespace_id={{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										},
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Create category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Создать пространство страниц\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set(\"category_id\", response.id)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"hello\",\r\n    \"namespace_id\": \"{{namespace_id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/categories",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/categories?page=1&size=100&namespace_id={{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										},
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Delete category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(204)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/categories/:category_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories",
+										":category_id"
+									],
+									"variable": [
+										{
+											"key": "category_id",
+											"value": "{{category_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/categories?page=1&size=100&namespace_id={{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										},
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Namespaces",
+					"item": [
+						{
+							"name": "[auth] Get Namespaces",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces?page=1&size=100",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Without auth] Get Namespaces",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Без авторизации\", () => {",
+											"    pm.response.to.have.status(401)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"    pm.expect(pm.response.json()['detail']).to.be.eq(\"Not authenticated\")",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces?page=1&size=100",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Wrong token] Get Namespaces",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Неверный токен\", () => {",
+											"    pm.response.to.have.status(401)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    pm.expect(pm.response.json()).to.be.eq(\"Could not validate credentials\")",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "123456",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces?page=1&size=100",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Create Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Создать пространство страниц\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set(\"namespace_id\", response.id)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"hello\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/:namespace_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										":namespace_id"
+									],
+									"variable": [
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Add user to namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": \"{{user_id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/:namespace_id/users/:user_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										":namespace_id",
+										"users",
+										":user_id"
+									],
+									"variable": [
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										},
+										{
+											"key": "user_id",
+											"value": "{{user_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/{{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										"{{namespace_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Delete user from namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(204)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/:namespace_id/users/:user_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										":namespace_id",
+										"users",
+										":user_id"
+									],
+									"variable": [
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										},
+										{
+											"key": "user_id",
+											"value": "{{user_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/{{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										"{{namespace_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Delete Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(204)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/:namespace_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										":namespace_id"
+									],
+									"variable": [
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(404)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"    pm.expect(pm.response.json()['message']).to.be.eq(\"Namespace not found\")",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/:namespace_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										":namespace_id"
+									],
+									"variable": [
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Namespaces",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces?page=1&size=100",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Notes",
+					"item": [
+						{
+							"name": "[auth] Get Namespaces",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces?page=1&size=100",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Create Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Создать пространство страниц\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set(\"namespace_id\", response.id)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"hello\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/categories?page=1&size=100&namespace_id={{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										},
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Create category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Создать пространство страниц\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set(\"category_id\", response.id)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"cats\",\r\n    \"namespace_id\": \"{{namespace_id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/categories",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Notes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/notes?page=1&size=100&namespace_id={{namespace_id}}",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"notes"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										},
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Create Note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Создать пространство страниц\", () => {",
+											"    pm.response.to.have.status(201)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.collectionVariables.set(\"note_id\", response.id)",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Article\",\r\n    \"text\": \"Some text\",\r\n    \"namespace_id\": \"{{namespace_id}}\",\r\n    \"categories\": [\"{{category_id}}\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{serviceUrl}}/notes",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"notes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Get Note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/notes/:note_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"notes",
+										":note_id"
+									],
+									"variable": [
+										{
+											"key": "note_id",
+											"value": "{{note_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Delete Note",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(204)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/notes/:note_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"notes",
+										":note_id"
+									],
+									"variable": [
+										{
+											"key": "note_id",
+											"value": "{{note_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Delete Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(204)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/categories/:category_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"categories",
+										":category_id"
+									],
+									"variable": [
+										{
+											"key": "category_id",
+											"value": "{{category_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[auth] Delete Namespace",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получить токен\", () => {",
+											"    pm.response.to.have.status(204)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/namespaces/:namespace_id",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"namespaces",
+										":namespace_id"
+									],
+									"variable": [
+										{
+											"key": "namespace_id",
+											"value": "{{namespace_id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Statistic",
+					"item": [
+						{
+							"name": "[auth] Get Statistics",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Получение пространств страниц\", () => {",
+											"    pm.response.to.have.status(200)",
+											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.contains(\"application/json\");",
+											"",
+											"    const response = pm.response.json();",
+											"    pm.expect(response.items).to.be.an(\"array\")",
+											"    pm.expect(response.page).to.be.not.undefined",
+											"    pm.expect(response.size).to.be.lte(response.items.length)",
+											"    pm.expect(response.total_elements).to.be.not.undefined",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{authorizationTokenAdmin}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{serviceUrl}}/statistics?page=1&size=100&service",
+									"host": [
+										"{{serviceUrl}}"
+									],
+									"path": [
+										"statistics"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "size",
+											"value": "100"
+										},
+										{
+											"key": "service",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.collectionVariables.set(\"libraryUid\", \"83575e12-7ce0-48ee-9931-51919ff3c9ee\")",
+							"pm.collectionVariables.set(\"bookUid\", \"f7cdc58f-2caf-4b15-9727-f89dcc629b27\")"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "serviceUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "libraryUid",
+			"value": ""
+		},
+		{
+			"key": "bookUid",
+			"value": ""
+		},
+		{
+			"key": "stars",
+			"value": ""
+		},
+		{
+			"key": "reservationUid",
+			"value": ""
+		},
+		{
+			"key": "authorizationToken",
+			"value": ""
+		},
+		{
+			"key": "authorizationTokenAdmin",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "my_username",
+			"value": ""
+		},
+		{
+			"key": "namespace_id",
+			"value": ""
+		},
+		{
+			"key": "category_id",
+			"value": ""
+		},
+		{
+			"key": "note_id",
+			"value": ""
+		}
+	]
+}

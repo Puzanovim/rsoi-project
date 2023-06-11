@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+SQLAlchemy
+pydantic
+python-multipart
+passlib[bcrypt]
+python-jose[cryptography]
+confluent_kafka
+httpx
+
+# migrations
+alembic
+sqlalchemy_utils
+asyncpg

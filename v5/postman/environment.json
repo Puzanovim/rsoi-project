@@ -1,0 +1,81 @@
+{
+	"id": "c7be9d0b-3ff6-44d4-8c06-05b125d63e06",
+	"name": "Notes system",
+	"values": [
+		{
+			"key": "serviceUrl",
+			"value": "http://localhost:8080",
+			"enabled": true
+		},
+		{
+			"key": "identityProviderUrl",
+			"value": "http://localhost:8030",
+			"enabled": true
+		},
+		{
+			"key": "usernameAdmin",
+			"value": "johndoe",
+			"enabled": true
+		},
+		{
+			"key": "passwordAdmin",
+			"value": "secret",
+			"enabled": true
+		},
+		{
+			"key": "username",
+			"value": "user",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "user",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "first_name",
+			"value": "user",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "second_name",
+			"value": "user",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "email",
+			"value": "user@example.ru",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "is_superuser",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "clientId",
+			"value": "gateway",
+			"enabled": true
+		},
+		{
+			"key": "clientSecret",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "namespaceId",
+			"value": "7fc160cb-dff0-4071-9248-6d1919ac2809",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-06-01T23:42:43.502Z",
+	"_postman_exported_using": "Postman/10.14.7"
+}

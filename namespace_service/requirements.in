@@ -2,6 +2,8 @@ fastapi
 uvicorn
 SQLAlchemy
 pydantic
+python-jose[cryptography]
+httpx
 
 # migrations
 alembic

@@ -1,0 +1,48 @@
+gateway-service:
+  service:
+    port: 8080
+    image:
+      name: puzanovim/gateway_service
+      version: v1
+
+notes-service:
+  service:
+    port: 8070
+    image:
+      name: puzanovim/notes_service
+      version: v1
+
+category-service:
+  service:
+    port: 8060
+    image:
+      name: puzanovim/category_service
+      version: v1
+
+namespace-service:
+  service:
+    port: 8050
+    image:
+      name: puzanovim/namespace_service
+      version: v1
+
+statistic-service:
+  service:
+    port: 8040
+    image:
+      name: puzanovim/statistic_service
+      version: v1
+
+identity-provider:
+  service:
+    port: 8030
+    image:
+      name: puzanovim/identity_provider
+      version: v1
+
+frontend:
+  service:
+    port: 8081
+    image:
+      name: puzanovim/frontend
+      version: v1

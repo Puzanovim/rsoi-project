@@ -2,6 +2,8 @@ fastapi
 uvicorn
 SQLAlchemy
 pydantic
+httpx
+python-multipart
 
 # migrations
 alembic

@@ -1,0 +1,26 @@
+apiVersion: v2
+name: services-chart
+type: application
+version: 1.0.0
+dependencies:
+  - name: service-chart
+    version: 1.0.0
+    alias: gateway-service
+  - name: service-chart
+    version: 1.0.0
+    alias: notes-service
+  - name: service-chart
+    version: 1.0.0
+    alias: category-service
+  - name: service-chart
+    version: 1.0.0
+    alias: namespace-service
+  - name: service-chart
+    version: 1.0.0
+    alias: statistic-service
+  - name: service-chart
+    version: 1.0.0
+    alias: identity-provider
+  - name: service-chart
+    version: 1.0.0
+    alias: frontend
