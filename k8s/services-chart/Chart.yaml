@@ -5,22 +5,22 @@ version: 1.0.0
 dependencies:
   - name: service-chart
     version: 1.0.0
-    alias: gateway_service
+    alias: gateway-service
   - name: service-chart
     version: 1.0.0
-    alias: notes_service
+    alias: notes-service
   - name: service-chart
     version: 1.0.0
-    alias: category_service
+    alias: category-service
   - name: service-chart
     version: 1.0.0
-    alias: namespace_service
+    alias: namespace-service
   - name: service-chart
     version: 1.0.0
-    alias: statistic_service
+    alias: statistic-service
   - name: service-chart
     version: 1.0.0
-    alias: identity_provider
+    alias: identity-provider
   - name: service-chart
     version: 1.0.0
     alias: frontend
